@@ -8,6 +8,11 @@ O fluxo seria assim:
 
 Eu já entendi que para o modelo distinguir corretamente, preciso treinar classes diferentes no Teachable Machine: uma para cada modelo de vape, e talvez uma classe “não vape” para evitar confusões.
 
+
+
+
+aaaaaaaaaaaaaaa
+
 Gostaria de ajuda para:
 
 Organizar melhor a parte de treino do Teachable Machine, criando classes para cada modelo de vape e uma classe “não vape”.
