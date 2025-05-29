@@ -1,0 +1,101 @@
+Projeto Classificador de Fones (Branco x Preto)
+Este projeto tem um backend em FastAPI para classificar imagens usando um modelo treinado no Teachable Machine, e um frontend em React Native (Expo) para tirar fotos e mostrar o resultado da classificação.
+
+Estrutura do Projeto
+bash
+Copiar
+Editar
+/backend
+  ├─ main.py
+  ├─ requirements.txt
+  └─ modelo/          # Coloque aqui o modelo exportado do Teachable Machine
+/app
+  └─ App.js
+Passo a passo para rodar
+1. Rodar o backend (FastAPI)
+Navegue até a pasta do backend:
+
+bash
+Copiar
+Editar
+cd backend
+Crie um ambiente virtual e ative:
+
+Windows:
+
+bash
+Copiar
+Editar
+python -m venv venv
+venv\Scripts\activate
+Linux / Mac:
+
+bash
+Copiar
+Editar
+python3 -m venv venv
+source venv/bin/activate
+Instale as dependências:
+
+bash
+Copiar
+Editar
+pip install -r requirements.txt
+Coloque o modelo exportado do Teachable Machine na pasta modelo/.
+
+Rode o servidor FastAPI:
+
+bash
+Copiar
+Editar
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+O backend estará rodando em http://localhost:8000.
+
+2. Rodar o frontend (Expo)
+Navegue até a pasta do app:
+
+bash
+Copiar
+Editar
+cd app
+Instale as dependências:
+
+bash
+Copiar
+Editar
+npm install
+No arquivo App.js, ajuste a variável API_URL para o endereço do backend.
+Exemplo (para rodar no mesmo computador):
+
+js
+Copiar
+Editar
+const API_URL = "http://localhost:8000/predict/";
+Se for usar um dispositivo móvel no mesmo Wi-Fi, substitua pelo IP local da máquina que está rodando o backend:
+
+js
+Copiar
+Editar
+const API_URL = "http://192.168.x.y:8000/predict/";
+Inicie o app Expo:
+
+bash
+Copiar
+Editar
+npx expo start
+Use o app Expo Go no celular para escanear o QR code e abrir o app.
+
+Teste rápido
+No app, tire uma foto do fone branco ou preto.
+
+A foto será enviada para o backend que fará a predição.
+
+O resultado será mostrado na tela do app.
+
+Dicas
+Certifique-se que o backend e o celular estejam na mesma rede (mesmo Wi-Fi).
+
+O modelo exportado do Teachable Machine deve ser compatível com o backend (TensorFlow/Keras .h5 ou pasta SavedModel).
+
+Atualize o IP no frontend se mudar de rede.
+

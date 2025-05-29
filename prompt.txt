@@ -1,0 +1,19 @@
+"Olá! Eu estou desenvolvendo um app mobile em React Native (Expo) para identificar tipos de vape usando a câmera do celular e um modelo de IA. Quero que o usuário tire uma foto do vape e o app identifique automaticamente qual é o modelo do vape, retornando informações detalhadas sobre ele.
+
+O fluxo seria assim:
+✅ Usuário abre a câmera no app e tira foto do vape.
+✅ A foto é enviada para uma API backend feita em Python (FastAPI).
+✅ No backend, o modelo de IA treinado no Teachable Machine faz a classificação da foto, dizendo qual modelo de vape é.
+✅ O app recebe essa resposta e abre uma tela com informações sobre o modelo do vape identificado (ex.: descrição, preço, etc).
+
+Eu já entendi que para o modelo distinguir corretamente, preciso treinar classes diferentes no Teachable Machine: uma para cada modelo de vape, e talvez uma classe “não vape” para evitar confusões.
+
+Gostaria de ajuda para:
+
+Organizar melhor a parte de treino do Teachable Machine, criando classes para cada modelo de vape e uma classe “não vape”.
+
+Criar o backend FastAPI com o endpoint para receber a foto e rodar o modelo exportado.
+
+Integrar esse endpoint ao app React Native (Expo), usando expo-camera para tirar foto e enviando pro backend.
+
+Exibir a tela de detalhes com as informações do vape identificado.
