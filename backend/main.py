@@ -7,7 +7,6 @@ import io
 
 app = FastAPI()
 
-# CORS para permitir requisições do app
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -15,18 +14,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Carrega o modelo treinado no Teachable Machine (ajuste caminho se necessário)
 model = keras.models.load_model("./modelo/keras_model.h5")
-
-# Classes treinadas no Teachable Machine
-classes = ["fone_branco", "fone_preto"]
+classes = ["vape-box", "pen", "pod", "nao-vape"]
 
 @app.post("/predict/")
 async def predict(file: UploadFile = File(...)):
     contents = await file.read()
     image = Image.open(io.BytesIO(contents)).convert("RGB")
-    
-    # Ajusta para o tamanho esperado pelo modelo (normalmente 224x224)
     image = image.resize((224, 224))
     img_array = np.array(image) / 255.0
     img_array = np.expand_dims(img_array, axis=0)
@@ -34,5 +28,6 @@ async def predict(file: UploadFile = File(...)):
     prediction = model.predict(img_array)
     predicted_class = np.argmax(prediction, axis=1)[0]
     class_name = classes[predicted_class]
+    confidence = float(np.max(prediction))
 
-    return {"class": class_name}
+    return {"class": class_name, "confidence": confidence}

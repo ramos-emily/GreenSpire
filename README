@@ -1,101 +1,178 @@
-Projeto Classificador de Fones (Branco x Preto)
-Este projeto tem um backend em FastAPI para classificar imagens usando um modelo treinado no Teachable Machine, e um frontend em React Native (Expo) para tirar fotos e mostrar o resultado da classificação.
+# Vape Identifier App
 
-Estrutura do Projeto
-bash
-Copiar
-Editar
-/backend
-  ├─ main.py
-  ├─ requirements.txt
-  └─ modelo/          # Coloque aqui o modelo exportado do Teachable Machine
-/app
-  └─ App.js
-Passo a passo para rodar
-1. Rodar o backend (FastAPI)
-Navegue até a pasta do backend:
+Um aplicativo mobile em **React Native (Expo)** que permite ao usuário tirar uma foto de um cigarro eletrônico (vape) e obter informações detalhadas sobre o modelo identificado por meio de um modelo de IA treinado no Teachable Machine.
 
-bash
-Copiar
-Editar
-cd backend
-Crie um ambiente virtual e ative:
+---
 
-Windows:
+## 🧩 Tecnologias utilizadas
 
-bash
-Copiar
-Editar
+- **Frontend:**  
+  - React Native (Expo)  
+  - Axios (para consumo da API)
+
+- **Backend:**  
+  - FastAPI  
+  - TensorFlow / Keras (modelo de classificação de imagens)  
+  - Pillow (processamento de imagens)  
+  - Numpy  
+  - CORS Middleware  
+
+---
+
+## 📦 Estrutura do projeto
+
+.
+├── backend/
+│ ├── main.py # Código FastAPI (este arquivo)
+│ ├── modelo/
+│ │ └── keras_model.h5 # Modelo treinado no Teachable Machine
+│ ├── requirements.txt # Dependências do backend
+│ └── README.md
+└── frontend/
+└── (código do seu app React Native)
+
+yaml
+
+---
+
+## 🚀 Como rodar o Backend (localmente)
+
+1. Clone o repositório:
+   ```
+   git clone https://github.com/seuusuario/vape-identifier.git
+   cd vape-identifier/backend
+Crie um ambiente virtual:
+
+
 python -m venv venv
-venv\Scripts\activate
-Linux / Mac:
+source venv/bin/activate  # Linux/macOS
+venv\Scripts\activate     # Windows
+Instale as dependências:
 
-bash
-Copiar
-Editar
+
+pip install -r requirements.txt
+O arquivo requirements.txt deve conter:
+
+nginx
+fastapi
+uvicorn
+tensorflow
+pillow
+numpy
+Coloque o modelo treinado (keras_model.h5) na pasta ./modelo/.
+
+Rode o servidor:
+
+
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+Por padrão, o servidor ficará disponível em:
+http://localhost:8000
+
+🌟 Exemplo de requisição do Frontend
+Para enviar a imagem capturada no app e receber o modelo do vape identificado:
+
+javascript
+import axios from 'axios';
+
+// Substitua pela URL do seu servidor backend (por exemplo, rodando local ou em produção)
+const API_URL = 'http://<ENDERECO_DO_BACKEND>:8000/predict/';
+
+async function enviarImagemVape(uri) {
+  const formData = new FormData();
+  formData.append('file', {
+    uri,
+    type: 'image/jpeg',
+    name: 'foto.jpg',
+  });
+
+  try {
+    const response = await axios.post(API_URL, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    console.log('Resposta da API:', response.data);
+    // { class: "VapePen", confidence: 0.95 }
+  } catch (error) {
+    console.error('Erro ao enviar imagem:', error);
+  }
+}
+🪄 Como inicializar o Frontend (Expo)
+Instale o Expo CLI, se ainda não tiver:
+
+
+npm install -g expo-cli
+Na pasta frontend/, instale as dependências:
+
+
+cd ../frontend
+npm install
+Inicie o app:
+
+
+expo start
+Abra no seu celular usando o Expo Go (disponível na Play Store / App Store).
+
+☁️ Como rodar na AWS (EC2 ou Beanstalk)
+Aqui está um guia simplificado para o backend:
+
+🚀 EC2
+Crie uma instância EC2 (Ubuntu, por exemplo).
+
+Acesse a instância via SSH.
+
+Instale o Python 3 e as bibliotecas necessárias:
+
+
+sudo apt update
+sudo apt install python3-pip python3-venv
+Clone seu repositório e ative o ambiente virtual:
+
+
+git clone https://github.com/seuusuario/vape-identifier.git
+cd vape-identifier/backend
 python3 -m venv venv
 source venv/bin/activate
-Instale as dependências:
-
-bash
-Copiar
-Editar
 pip install -r requirements.txt
-Coloque o modelo exportado do Teachable Machine na pasta modelo/.
+Execute o backend:
 
-Rode o servidor FastAPI:
 
-bash
-Copiar
-Editar
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
-O backend estará rodando em http://localhost:8000.
+uvicorn main:app --host 0.0.0.0 --port 8000
+Configure o Security Group da instância EC2 para permitir acesso à porta 8000 ou utilize um servidor de produção (ex.: Nginx + Gunicorn/Uvicorn).
 
-2. Rodar o frontend (Expo)
-Navegue até a pasta do app:
+🌱 Elastic Beanstalk (opcional)
+Instale a CLI do Beanstalk:
 
-bash
-Copiar
-Editar
-cd app
-Instale as dependências:
 
-bash
-Copiar
-Editar
-npm install
-No arquivo App.js, ajuste a variável API_URL para o endereço do backend.
-Exemplo (para rodar no mesmo computador):
+pip install awsebcli
+Configure o Beanstalk com:
 
-js
-Copiar
-Editar
-const API_URL = "http://localhost:8000/predict/";
-Se for usar um dispositivo móvel no mesmo Wi-Fi, substitua pelo IP local da máquina que está rodando o backend:
 
-js
-Copiar
-Editar
-const API_URL = "http://192.168.x.y:8000/predict/";
-Inicie o app Expo:
+eb init
+Crie e faça deploy:
 
-bash
-Copiar
-Editar
-npx expo start
-Use o app Expo Go no celular para escanear o QR code e abrir o app.
 
-Teste rápido
-No app, tire uma foto do fone branco ou preto.
+eb create vape-api-env
+eb deploy
+O Beanstalk cuidará da escalabilidade e endpoint público.
 
-A foto será enviada para o backend que fará a predição.
+⚙️ Notas adicionais
+Segurança: Em produção, use HTTPS e configure corretamente seu CORS (não use "*" em produção!).
 
-O resultado será mostrado na tela do app.
+Monitoramento: Considere usar serviços como CloudWatch (AWS) ou Sentry.
 
-Dicas
-Certifique-se que o backend e o celular estejam na mesma rede (mesmo Wi-Fi).
+Banco de dados: Atualmente não há persistência além do modelo, mas se quiser adicionar um banco para armazenar históricos de imagens, sugiro PostgreSQL ou MongoDB.
 
-O modelo exportado do Teachable Machine deve ser compatível com o backend (TensorFlow/Keras .h5 ou pasta SavedModel).
+📄 Sobre o projeto
+Este projeto foi desenvolvido para identificar diferentes tipos de vapes, utilizando um modelo de IA treinado no Teachable Machine do Google.
+Atualmente suporta as seguintes classes:
 
-Atualize o IP no frontend se mudar de rede.
+✅ VapeBox
+✅ VapePen
+✅ VapePod
+✅ NaoVape
 
+📬 Contato
+Desenvolvido por [Seu Nome ou Equipe]
+📧 seuemail@dominio.com
