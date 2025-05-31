@@ -31,8 +31,6 @@ Um aplicativo mobile em **React Native (Expo)** que permite ao usuário tirar um
 └── frontend/
 └── (código do seu app React Native)
 
-yaml
-
 ---
 
 ## 🚀 Como rodar o Backend (localmente)
@@ -51,31 +49,24 @@ Instale as dependências:
 
 
 pip install -r requirements.txt
-O arquivo requirements.txt deve conter:
-
-nginx
-fastapi
-uvicorn
-tensorflow
-pillow
-numpy
 Coloque o modelo treinado (keras_model.h5) na pasta ./modelo/.
 
 Rode o servidor:
 
 
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
-Por padrão, o servidor ficará disponível em:
-http://localhost:8000
+uvicorn main:app --reload --host 0.0.0.0 --port 8080
+O servidor ficará disponível em:
 
+arduino
+http://localhost:8080
 🌟 Exemplo de requisição do Frontend
 Para enviar a imagem capturada no app e receber o modelo do vape identificado:
 
 javascript
 import axios from 'axios';
 
-// Substitua pela URL do seu servidor backend (por exemplo, rodando local ou em produção)
-const API_URL = 'http://<ENDERECO_DO_BACKEND>:8000/predict/';
+// Substitua pela URL do seu servidor backend (por exemplo, local ou produção)
+const API_URL = 'https://greenspire.onrender.com/predict/';
 
 async function enviarImagemVape(uri) {
   const formData = new FormData();
@@ -99,7 +90,7 @@ async function enviarImagemVape(uri) {
   }
 }
 🪄 Como inicializar o Frontend (Expo)
-Instale o Expo CLI, se ainda não tiver:
+Instale o Expo CLI (caso ainda não tenha):
 
 
 npm install -g expo-cli
@@ -114,55 +105,24 @@ Inicie o app:
 expo start
 Abra no seu celular usando o Expo Go (disponível na Play Store / App Store).
 
-☁️ Como rodar na AWS (EC2 ou Beanstalk)
-Aqui está um guia simplificado para o backend:
+☁️ Como rodar no Render
+O backend já está disponível em produção no seguinte endpoint:
 
-🚀 EC2
-Crie uma instância EC2 (Ubuntu, por exemplo).
+https://greenspire.onrender.com/predict/
+Caso queira fazer modificações e atualizar o deploy:
 
-Acesse a instância via SSH.
+Faça as alterações no repositório.
 
-Instale o Python 3 e as bibliotecas necessárias:
+O Render irá automaticamente detectar e fazer o build do projeto (caso configurado com GitHub).
 
-
-sudo apt update
-sudo apt install python3-pip python3-venv
-Clone seu repositório e ative o ambiente virtual:
-
-
-git clone https://github.com/seuusuario/vape-identifier.git
-cd vape-identifier/backend
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-Execute o backend:
-
-
-uvicorn main:app --host 0.0.0.0 --port 8000
-Configure o Security Group da instância EC2 para permitir acesso à porta 8000 ou utilize um servidor de produção (ex.: Nginx + Gunicorn/Uvicorn).
-
-🌱 Elastic Beanstalk (opcional)
-Instale a CLI do Beanstalk:
-
-
-pip install awsebcli
-Configure o Beanstalk com:
-
-
-eb init
-Crie e faça deploy:
-
-
-eb create vape-api-env
-eb deploy
-O Beanstalk cuidará da escalabilidade e endpoint público.
+Ou acesse o painel do Render e clique em "Manual Deploy".
 
 ⚙️ Notas adicionais
-Segurança: Em produção, use HTTPS e configure corretamente seu CORS (não use "*" em produção!).
+Segurança: Em produção, use HTTPS (Render já fornece) e configure corretamente seu CORS (não use "*" em produção).
 
-Monitoramento: Considere usar serviços como CloudWatch (AWS) ou Sentry.
+Monitoramento: Considere usar serviços como Sentry ou ferramentas do próprio Render.
 
-Banco de dados: Atualmente não há persistência além do modelo, mas se quiser adicionar um banco para armazenar históricos de imagens, sugiro PostgreSQL ou MongoDB.
+Banco de dados: Atualmente, o app não usa persistência além do modelo. Se desejar armazenar históricos de imagens, sugiro PostgreSQL ou MongoDB.
 
 📄 Sobre o projeto
 Este projeto foi desenvolvido para identificar diferentes tipos de vapes, utilizando um modelo de IA treinado no Teachable Machine do Google.
@@ -173,6 +133,3 @@ Atualmente suporta as seguintes classes:
 ✅ VapePod
 ✅ NaoVape
 
-📬 Contato
-Desenvolvido por [Seu Nome ou Equipe]
-📧 seuemail@dominio.com
