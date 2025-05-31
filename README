@@ -133,3 +133,117 @@ Atualmente suporta as seguintes classes:
 ✅ VapePod
 ✅ NaoVape
 
+
+
+
+
+
+Integração do Frontend com o Backend de Postagens
+
+### 🌟 Endpoints disponíveis
+
+| Método | URL                                          | Descrição                                      |
+|--------|----------------------------------------------|------------------------------------------------|
+| `POST` | `https://greenspire.onrender.com/predict/`   | Enviar imagem para previsão de tipo de cigarro |
+| `POST` | `https://greenspire.onrender.com/postagens/` | Criar uma nova postagem (imagem + descrição)   |
+| `GET`  | `https://greenspire.onrender.com/postagens/` | Listar todas as postagens                      |
+| `GET`  | `https://greenspire.onrender.com/uploads/{file}` | Acessar as imagens postadas               |
+
+---
+
+### 🎯 Como funciona a criação de postagens
+
+- A pessoa envia uma **foto** e uma **descrição** curta do que fez de sustentável.
+- O backend salva a imagem e adiciona a postagem no `postagens.json`.
+- O front pode exibir o feed com as imagens e descrições de todos.
+
+---
+
+### 🚀 Exemplo de requisição para criar postagem
+
+#### ✅ Usando **fetch** no React Native (Expo):
+
+```javascript
+const criarPostagem = async (fotoUri, descricao) => {
+  const formData = new FormData();
+  formData.append("file", {
+    uri: fotoUri,
+    name: "foto.jpg",
+    type: "image/jpeg",
+  });
+  formData.append("descricao", descricao);
+
+  try {
+    const response = await fetch("https://greenspire.onrender.com/postagens/", {
+      method: "POST",
+      body: formData,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    const data = await response.json();
+    console.log("Postagem criada:", data);
+  } catch (error) {
+    console.error("Erro ao criar postagem:", error);
+  }
+};
+✅ Usando axios:
+javascript
+Copiar
+Editar
+import axios from "axios";
+
+const criarPostagem = async (fotoUri, descricao) => {
+  const formData = new FormData();
+  formData.append("file", {
+    uri: fotoUri,
+    name: "foto.jpg",
+    type: "image/jpeg",
+  });
+  formData.append("descricao", descricao);
+
+  try {
+    const response = await axios.post("https://greenspire.onrender.com/postagens/", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    console.log("Postagem criada:", response.data);
+  } catch (error) {
+    console.error("Erro ao criar postagem:", error);
+  }
+};
+🔍 Exibir postagens no app (GET /postagens/)
+javascript
+Copiar
+Editar
+const carregarPostagens = async () => {
+  try {
+    const response = await fetch("https://greenspire.onrender.com/postagens/");
+    const postagens = await response.json();
+    console.log("Postagens:", postagens);
+
+    // Exibir no app como lista
+  } catch (error) {
+    console.error("Erro ao carregar postagens:", error);
+  }
+};
+📸 Acessando as imagens salvas
+Cada postagem tem um campo foto_url, por exemplo:
+
+json
+Copiar
+Editar
+{
+  "descricao": "Usei a bateria como powerbank",
+  "foto_url": "/uploads/20250531120000_foto.jpg",
+  "data": "2025-05-31T12:00:00"
+}
+No front, para exibir a imagem:
+
+javascript
+Copiar
+Editar
+const BASE_URL = "https://greenspire.onrender.com";
+const imagemCompleta = `${BASE_URL}${foto_url}`;
