@@ -1,6 +1,6 @@
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
-from tensorflow.keras.models import load_model
+from tensorflow import keras
 import numpy as np
 from PIL import Image
 import io
@@ -16,17 +16,16 @@ app.add_middleware(
 )
 
 # Carrega o modelo treinado no Teachable Machine (ajuste caminho se necessário)
-model = load_model("modelo/keras_model.h5", compile=False)
+model = keras.models.load_model("./modelo/keras_model.h5")
 
-# Carrega as classes treinadas do arquivo labels.txt
-with open("modelo/labels.txt", "r") as f:
-    classes = [line.strip() for line in f.readlines()]
+# Classes treinadas no Teachable Machine
+classes = ["fone_branco", "fone_preto"]
 
 @app.post("/predict/")
 async def predict(file: UploadFile = File(...)):
     contents = await file.read()
     image = Image.open(io.BytesIO(contents)).convert("RGB")
-
+    
     # Ajusta para o tamanho esperado pelo modelo (normalmente 224x224)
     image = image.resize((224, 224))
     img_array = np.array(image) / 255.0
