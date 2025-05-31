@@ -35,7 +35,7 @@ async def predict(file: UploadFile = File(...)):
 
     async with model_lock:
 
-        await asyncio.sleep(120)
+        await asyncio.sleep(20)
         prediction = model.predict(img_array)
         predicted_class = np.argmax(prediction, axis=1)[0]
         class_name = classes[predicted_class]
