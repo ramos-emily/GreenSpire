@@ -4,6 +4,7 @@ from tensorflow import keras
 import numpy as np
 from PIL import Image
 import io
+import asyncio 
 
 app = FastAPI()
 
@@ -17,6 +18,8 @@ app.add_middleware(
 model = keras.models.load_model("./modelo/keras_model.h5")
 classes = ["vape-box", "pen", "pod", "nao-vape"]
 
+model_lock = asyncio.Lock()
+
 @app.post("/predict/")
 async def predict(file: UploadFile = File(...)):
     contents = await file.read()
@@ -29,5 +32,14 @@ async def predict(file: UploadFile = File(...)):
     predicted_class = np.argmax(prediction, axis=1)[0]
     class_name = classes[predicted_class]
     confidence = float(np.max(prediction))
+
+    async with model_lock:
+
+        await asyncio.sleep(120)
+        prediction = model.predict(img_array)
+        predicted_class = np.argmax(prediction, axis=1)[0]
+        class_name = classes[predicted_class]
+        confidence = float(np.max(prediction))
+
 
     return {"class": class_name, "confidence": confidence}
