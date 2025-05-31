@@ -46,7 +46,7 @@ Base.metadata.create_all(bind=engine)
 # ---------- Modelo IA ----------
 model = keras.models.load_model("./modelo/keras_model.h5")
 classes = ["vape-box", "pen", "pod", "nao-vape"]
-model_lock = asyncio.Lock()
+# model_lock = asyncio.Lock()
 
 @app.post("/predict/")
 async def predict(file: UploadFile = File(...)):
@@ -61,12 +61,12 @@ async def predict(file: UploadFile = File(...)):
     class_name = classes[predicted_class]
     confidence = float(np.max(prediction))
 
-    async with model_lock:
-        await asyncio.sleep(120)
-        prediction = model.predict(img_array)
-        predicted_class = np.argmax(prediction, axis=1)[0]
-        class_name = classes[predicted_class]
-        confidence = float(np.max(prediction))
+    # async with model_lock:
+    #     # await asyncio.sleep(120)
+    #     prediction = model.predict(img_array)
+    #     predicted_class = np.argmax(prediction, axis=1)[0]
+    #     class_name = classes[predicted_class]
+    #     confidence = float(np.max(prediction))
 
     return {"class": class_name, "confidence": confidence}
 
@@ -114,6 +114,10 @@ async def listar_postagens():
         }
         for p in postagens
     ]
+
+@app.get("/")
+async def root():
+    return {"mensagem": "API online!"}
 
 # Serve as fotos salvas
 app.mount("/uploads", StaticFiles(directory=UPLOADS_DIR), name="uploads")
